@@ -34,22 +34,13 @@ async function startServer() {
   // create json files
   for (let d of directories) {
     try {
-      console.log("DIR", d);
-
       const notes = readNotes(d);
       const reservations = getReservations(d);
-
-      console.log(notes)
-      console.log(reservations)
-
       const result = assignTables(reservations, availableTables, notes);
       const platsReservierungenJSON = JSON.stringify(result, null, 2)
-      // console.log(platsReservierungenJSON);
       fs.writeFileSync(path.join(__dirname, 'public', 'data', d, 'platzierteReservierungen.json'), platsReservierungenJSON)
-
       const roomsLookup = getRoomsLookup(result);
       const roomsLookupJSON = JSON.stringify(roomsLookup, null, 2)
-      // console.log(roomsLookupJSON);
       fs.writeFileSync(path.join(__dirname, 'public', 'data', d, 'roomsLookup.json'), roomsLookupJSON);
     } catch (e) {
       console.error(`Cannot create data for ${d}:`, e);
@@ -75,7 +66,6 @@ app.get('/', async (req, res) => {
   if (directories) {
     res.render('index', {directories}); // Übergibt die Ordner an das Template
   } else {
-    console.error(error);
     res.status(500).send('Fehler beim Laden der Ordner');
   }
 });
