@@ -1,0 +1,445 @@
+/* General styles */
+body {
+    background-color: white;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 10rem;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+}
+
+h1 {
+    font-size: 1.875rem;
+    font-weight: 500;
+    margin-bottom: 3rem;
+    letter-spacing: -0.025em;
+}
+
+/* Floor plan styles */
+.floor-plan-container {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.floor-plan-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.floor-plan-section h2 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.floor-plan {
+    position: relative;
+    width: 100%;
+    border: 1px solid #000;
+    background-color: #fff;
+}
+
+.empore {
+    aspect-ratio: 3 / 1;
+}
+
+.main-floor {
+    aspect-ratio: 1 / 1.3;
+}
+
+.outer-border {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+}
+
+/* Common table styles */
+.table-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.table {
+    width: 30px;
+    height: 40px;
+    background-color: #2c5d7c;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    text-align: center;
+}
+
+.table.filled {
+    background-color: #fd4f00;
+}
+
+.dots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 40px;
+    margin: 2px 0;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background-color: #3b7394;
+    border-radius: 50%;
+    margin: 2px;
+}
+
+.dot.filled {
+    background-color: #fd4f00;
+}
+
+/* Stairs styles */
+.stairs {
+    position: absolute;
+    width: 60px;
+    height: 80px;
+    top: 50px;
+}
+
+.stairs.left {
+    left: 15px;
+    border-left: 1px solid #000;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+.stairs.right {
+    right: 15px;
+    border-right: 1px solid #000;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+.stairs::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.stairs.left::before {
+    left: 15px;
+    border-left: 5px solid transparent;
+    border-image: repeating-linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent 5px,
+            #000 5px,
+            #000 10px
+    ) 1;
+}
+
+.stairs.right::before {
+    right: 15px;
+    border-right: 5px solid transparent;
+    border-image: repeating-linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent 5px,
+            #000 5px,
+            #000 10px
+    ) 1;
+}
+
+/* Empore specific layouts */
+.empore .tables-row {
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - 150px);
+    margin: 0 auto;
+}
+
+.empore .tables-row.top {
+    margin-top: 15px;
+}
+
+.empore .tables-row.bottom {
+    margin-top: 50px;
+}
+
+/* Main floor specific layouts */
+.main-floor .top-section {
+    display: grid;
+    grid-template-columns: 60px 1fr 200px;
+    grid-template-rows: auto;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.table-container.single {
+    margin-left: 20px;
+}
+
+.bar.el-santa {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    position: relative;
+}
+
+.bar-label {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.bar-counter {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #000;
+    background-color: #fff;
+}
+
+.tables-group.right {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+    display: flex;
+    justify-content: space-around;
+}
+
+.tables-group.below-bar {
+    grid-column: 2 / 4;
+    grid-row: 2 / 3;
+    display: flex;
+    justify-content: space-around;
+}
+
+/* Middle section with table rows */
+.middle-section {
+    position: relative;
+    margin-top: 30px;
+}
+
+.middle-section .tables-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.tables-group.bottom-right {
+    position: absolute;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.tables-group .upper-row,
+.tables-group .lower-row {
+    display: flex;
+    justify-content: space-around;
+    gap: 5px;
+}
+
+/* Emergency exit styles */
+.emergency-exit {
+    position: absolute;
+    right: -120px;
+    width: 120px;
+    height: 60px;
+    background: repeating-linear-gradient(
+            45deg,
+            #ff0000,
+            #ff0000 10px,
+            #ffffff 10px,
+            #ffffff 20px
+    );
+    border: 1px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Bottom section styles */
+.bottom-section {
+    position: relative;
+    margin-top: 150px;
+    height: 220px;
+}
+
+.dashed-area {
+    position: absolute;
+    left: 50px;
+    top: 0;
+    width: 350px;
+    height: 150px;
+    border: 1px dashed #000;
+}
+
+.checkout-counters {
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+}
+
+.counter {
+    width: 60px;
+    height: 25px;
+    border: 1px solid #000;
+    background-color: #fff;
+}
+
+.ramp {
+    position: absolute;
+    left: 0;
+    bottom: 50px;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ramp-label {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-size: 14px;
+}
+
+.bar-counter.left {
+    position: absolute;
+    left: 120px;
+    bottom: 60px;
+    width: 250px;
+    height: 20px;
+    border: 1px solid #000;
+    background-color: #fff;
+}
+
+.bar.senga {
+    position: absolute;
+    right: 150px;
+    bottom: 50px;
+    width: 220px;
+}
+
+.bar.senga .bar-counter {
+    height: 20px;
+}
+
+.tables-group.bottom-right-corner {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .floor-plan-container {
+        max-width: 100%;
+    }
+
+    .empore {
+        aspect-ratio: 2.5 / 1;
+    }
+
+    .main-floor {
+        aspect-ratio: 1 / 1.5;
+    }
+
+    .table {
+        width: 25px;
+        height: 35px;
+        font-size: 10px;
+    }
+
+    .dots {
+        width: 35px;
+    }
+
+    .dot {
+        width: 5px;
+        height: 5px;
+    }
+
+    .bar-label {
+        font-size: 12px;
+    }
+
+    .emergency-exit {
+        width: 100px;
+        height: 50px;
+        right: -30px;
+    }
+
+    .exit-label {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .floor-plan-section h2 {
+        font-size: 20px;
+    }
+
+    .table {
+        width: 20px;
+        height: 28px;
+        font-size: 9px;
+    }
+
+    .dots {
+        width: 30px;
+    }
+
+    .dot {
+        width: 4px;
+        height: 4px;
+        margin: 1px;
+    }
+
+    .emergency-exit {
+        width: 80px;
+        height: 40px;
+        right: -20px;
+    }
+
+    .exit-label {
+        font-size: 10px;
+    }
+
+    .bar-label {
+        font-size: 10px;
+    }
+}

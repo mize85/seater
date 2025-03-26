@@ -1,0 +1,5 @@
+.idea
+*.xlsx
+*.json
+*.txt
+node_modules

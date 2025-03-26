@@ -1,0 +1,405 @@
+<h1>Details zu: {{folderName}}</h1>
+<p>Pfad: {{path}}</p>
+<p>Erstellt: {{stats.birthtime}}</p>
+<p>Letzte Änderung: {{stats.mtime}}</p>
+<a href="/">Zurück zur Übersicht</a>
+
+<div class="container">
+    <h1>Plan</h1>
+    <div id="floorPlanContainer"></div>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Bestellnummer</th>
+        <th>Vorname</th>
+        <th>Nachname</th>
+        <th>Anzahl</th>
+        <th>Tische</th>
+        <th>Notizen</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each platzierteReservierungen.assigned}}
+        <tr>
+            <td>{{this.Bestellnummer}}</td>
+            <td>{{this.Vorname}}</td>
+            <td>{{this.Nachname}}</td>
+            <td>{{this.anzahl}}</td>
+            <td>
+                {{#each this.zugewieseneTische}}
+                    {{this.id}} ({{this.typ}}) - {{this.seats}} Plätze,
+                {{/each}}
+            </td>
+            <td>
+                {{#each this.Notizen}}
+                    {{this.text}},
+                {{/each}}
+            </td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+
+<script>
+
+    let roomsLookup = {};
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        const response = await fetch(`/data/{{folderName}}/roomsLookup.json`);
+        if (!response.ok) {
+            throw new Error('Netzwerkantwort war nicht ok');
+        }
+        roomsLookup = await response.json();
+
+        const floorPlanContainer = document.getElementById('floorPlanContainer');
+
+        if (!floorPlanContainer) {
+            console.error('Floor plan container not found');
+            return;
+        }
+
+        // Create the main container
+        const container = document.createElement('div');
+        container.className = 'floor-plan-container';
+
+        // Add Empore section
+        container.appendChild(createEmporeSection());
+
+        // Add Main Floor section
+        container.appendChild(createMainFloorSection());
+
+        // Append to the container in the DOM
+        floorPlanContainer.appendChild(container);
+    });
+
+    // Function to create the Empore section
+    function createEmporeSection() {
+        const section = document.createElement('div');
+        section.className = 'floor-plan-section';
+
+        const title = document.createElement('h2');
+        title.textContent = 'Festscheune Empore';
+        section.appendChild(title);
+
+        const floorPlan = document.createElement('div');
+        floorPlan.className = 'floor-plan empore';
+
+        const outerBorder = document.createElement('div');
+        outerBorder.className = 'outer-border';
+
+        // Add stairs
+        const stairsLeft = document.createElement('div');
+        stairsLeft.className = 'stairs left';
+        outerBorder.appendChild(stairsLeft);
+
+        const stairsRight = document.createElement('div');
+        stairsRight.className = 'stairs right';
+        outerBorder.appendChild(stairsRight);
+
+        // Add top row tables
+        const topRow = document.createElement('div');
+        topRow.className = 'tables-row top';
+
+        for (let num = 78; num <= 85; num++) {
+            topRow.appendChild(createTable(num, 4));
+        }
+
+        outerBorder.appendChild(topRow);
+
+        // Add bottom row tables
+        const bottomRow = document.createElement('div');
+        bottomRow.className = 'tables-row bottom';
+
+        for (let num = 77; num >= 69; num--) {
+            bottomRow.appendChild(createTable(num, 4));
+        }
+
+        outerBorder.appendChild(bottomRow);
+        floorPlan.appendChild(outerBorder);
+        section.appendChild(floorPlan);
+
+        return section;
+    }
+
+    // Function to create the Main Floor section
+    function createMainFloorSection() {
+        const section = document.createElement('div');
+        section.className = 'floor-plan-section';
+
+        const title = document.createElement('h2');
+        title.textContent = 'Festscheune Ebenerdig';
+        section.appendChild(title);
+
+        const floorPlan = document.createElement('div');
+        floorPlan.className = 'floor-plan main-floor';
+
+        const outerBorder = document.createElement('div');
+        outerBorder.className = 'outer-border';
+
+        // Add stairs
+        const stairsLeft = document.createElement('div');
+        stairsLeft.className = 'stairs left';
+        outerBorder.appendChild(stairsLeft);
+
+        const stairsRight = document.createElement('div');
+        stairsRight.className = 'stairs right';
+        outerBorder.appendChild(stairsRight);
+
+        // Add top section
+        const topSection = document.createElement('div');
+        topSection.className = 'top-section';
+
+        // Single tables
+        const singleTable1 = document.createElement('div');
+        singleTable1.className = 'table-container single';
+        singleTable1.appendChild(createTable(68, 6));
+        topSection.appendChild(singleTable1);
+
+        const singleTable2 = document.createElement('div');
+        singleTable2.className = 'table-container single';
+        singleTable2.appendChild(createTable(59, 6));
+        topSection.appendChild(singleTable2);
+
+        // El Santa Bar
+        const barElSanta = document.createElement('div');
+        barElSanta.className = 'bar el-santa';
+
+        const barLabelSanta = document.createElement('div');
+        barLabelSanta.className = 'bar-label';
+        barLabelSanta.textContent = 'Bar „El Santa"';
+        barElSanta.appendChild(barLabelSanta);
+
+        const barCounterSanta = document.createElement('div');
+        barCounterSanta.className = 'bar-counter';
+        barElSanta.appendChild(barCounterSanta);
+
+        topSection.appendChild(barElSanta);
+
+        // Right tables group
+        const tablesGroupRight = document.createElement('div');
+        tablesGroupRight.className = 'tables-group right';
+
+        for (let num = 67; num >= 64; num--) {
+            tablesGroupRight.appendChild(createTable(num, 6));
+        }
+
+        topSection.appendChild(tablesGroupRight);
+
+        // Below bar tables group
+        const tablesGroupBelowBar = document.createElement('div');
+        tablesGroupBelowBar.className = 'tables-group below-bar';
+
+        for (let num = 60; num <= 63; num++) {
+            tablesGroupBelowBar.appendChild(createTable(num, 6));
+        }
+
+        topSection.appendChild(tablesGroupBelowBar);
+        outerBorder.appendChild(topSection);
+
+        // Middle section
+        const middleSection = document.createElement('div');
+        middleSection.className = 'middle-section';
+
+        // Top row
+        const topRowMiddle = document.createElement('div');
+        topRowMiddle.className = 'tables-row top';
+
+        for (let num = 58; num >= 48; num--) {
+            topRowMiddle.appendChild(createTable(num, 6));
+        }
+
+        middleSection.appendChild(topRowMiddle);
+
+        // Middle row
+        const middleRowMiddle = document.createElement('div');
+        middleRowMiddle.className = 'tables-row middle';
+
+        for (let num = 47; num >= 34; num--) {
+            middleRowMiddle.appendChild(createTable(num, 6));
+        }
+
+        middleSection.appendChild(middleRowMiddle);
+
+        // Bottom row
+        const bottomRowMiddle = document.createElement('div');
+        bottomRowMiddle.className = 'tables-row bottom';
+
+        for (let num = 33; num >= 20; num--) {
+            bottomRowMiddle.appendChild(createTable(num, 6));
+        }
+
+        middleSection.appendChild(bottomRowMiddle);
+
+        // Bottom right tables group
+        const tablesGroupBottomRight = document.createElement('div');
+        tablesGroupBottomRight.className = 'tables-group bottom-right';
+
+        const upperRow = document.createElement('div');
+        upperRow.className = 'upper-row';
+
+        for (let num = 15; num <= 20; num++) {
+            upperRow.appendChild(createTable(num, 6));
+        }
+
+        tablesGroupBottomRight.appendChild(upperRow);
+
+        const lowerRow = document.createElement('div');
+        lowerRow.className = 'lower-row';
+
+        for (let num = 14; num >= 9; num--) {
+            lowerRow.appendChild(createTable(num, 6));
+        }
+
+        tablesGroupBottomRight.appendChild(lowerRow);
+        middleSection.appendChild(tablesGroupBottomRight);
+
+        // Emergency exit top
+        const emergencyExitTop = document.createElement('div');
+        emergencyExitTop.className = 'emergency-exit top';
+
+        const exitLabelTop = document.createElement('div');
+        exitLabelTop.className = 'exit-label';
+        exitLabelTop.textContent = 'Notausgang';
+        emergencyExitTop.appendChild(exitLabelTop);
+
+        middleSection.appendChild(emergencyExitTop);
+        outerBorder.appendChild(middleSection);
+
+        // Bottom section
+        const bottomSection = document.createElement('div');
+        bottomSection.className = 'bottom-section';
+
+        // Dashed area
+        const dashedArea = document.createElement('div');
+        dashedArea.className = 'dashed-area';
+
+        const checkoutCounters = document.createElement('div');
+        checkoutCounters.className = 'checkout-counters';
+
+        for (let i = 0; i < 4; i++) {
+            const counter = document.createElement('div');
+            counter.className = 'counter';
+            checkoutCounters.appendChild(counter);
+        }
+
+        dashedArea.appendChild(checkoutCounters);
+        bottomSection.appendChild(dashedArea);
+
+        // Ramp
+        const ramp = document.createElement('div');
+        ramp.className = 'ramp';
+
+        const rampLabel = document.createElement('div');
+        rampLabel.className = 'ramp-label';
+        rampLabel.textContent = 'Rampe';
+        ramp.appendChild(rampLabel);
+
+        bottomSection.appendChild(ramp);
+
+        // Left bar counter
+        const barCounterLeft = document.createElement('div');
+        barCounterLeft.className = 'bar-counter left';
+        bottomSection.appendChild(barCounterLeft);
+
+        // Senga Senga Bar
+        const barSenga = document.createElement('div');
+        barSenga.className = 'bar senga';
+
+        const barLabelSenga = document.createElement('div');
+        barLabelSenga.className = 'bar-label';
+        barLabelSenga.textContent = 'Bar „Senga Senga"';
+        barSenga.appendChild(barLabelSenga);
+
+        const barCounterSenga = document.createElement('div');
+        barCounterSenga.className = 'bar-counter';
+        barSenga.appendChild(barCounterSenga);
+
+        bottomSection.appendChild(barSenga);
+
+        // Bottom right corner tables
+        const tablesGroupBottomRightCorner = document.createElement('div');
+        tablesGroupBottomRightCorner.className = 'tables-group bottom-right-corner';
+
+        const upperRowCorner = document.createElement('div');
+        upperRowCorner.className = 'upper-row';
+
+        for (let num = 5; num <= 8; num++) {
+            upperRowCorner.appendChild(createTable(num, 6));
+        }
+
+        tablesGroupBottomRightCorner.appendChild(upperRowCorner);
+
+        const lowerRowCorner = document.createElement('div');
+        lowerRowCorner.className = 'lower-row';
+
+        for (let num = 4; num >= 1; num--) {
+            lowerRowCorner.appendChild(createTable(num, 6));
+        }
+
+        tablesGroupBottomRightCorner.appendChild(lowerRowCorner);
+        bottomSection.appendChild(tablesGroupBottomRightCorner);
+
+        // Emergency exit bottom
+        const emergencyExitBottom = document.createElement('div');
+        emergencyExitBottom.className = 'emergency-exit bottom';
+
+        const exitLabelBottom = document.createElement('div');
+        exitLabelBottom.className = 'exit-label';
+        exitLabelBottom.textContent = 'Notausgang';
+        emergencyExitBottom.appendChild(exitLabelBottom);
+
+        bottomSection.appendChild(emergencyExitBottom);
+        outerBorder.appendChild(bottomSection);
+
+        floorPlan.appendChild(outerBorder);
+        section.appendChild(floorPlan);
+
+        return section;
+    }
+
+    // Function to create a table with a number and dots
+    function createTable(num, dotCount) {
+        const tableContainer = document.createElement('div');
+        tableContainer.className = 'table-container';
+
+        const table = document.createElement('div');
+
+        const room = roomsLookup['' + num];
+        let filled = -1;
+        if (room) {
+            filled = room["seats"];
+
+            table.addEventListener('click', function (event) {
+                // do something
+                window.alert(JSON.stringify(room, null, 2));
+            });
+        }
+
+        if (dotCount === filled) {
+            table.className = 'table filled';
+        } else {
+            table.className = 'table';
+        }
+        table.textContent = num;
+        tableContainer.appendChild(table);
+
+        const dots = document.createElement('div');
+        dots.className = 'dots';
+
+        for (let i = 0; i < dotCount; i++) {
+            const dot = document.createElement('div');
+            if (i < filled) {
+                dot.className = 'dot filled';
+            } else {
+                dot.className = 'dot';
+            }
+            dots.appendChild(dot);
+        }
+
+        tableContainer.appendChild(dots);
+
+        return tableContainer;
+    }
+</script>
